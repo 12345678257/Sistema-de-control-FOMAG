@@ -1567,22 +1567,101 @@ def ui_configuracion():
         st.markdown("**Convenios activos**")
         st.dataframe(DATA.list_convenios(), use_container_width=True, hide_index=True)
 
-    # Instituciones
+      # Instituciones
     with tabs[2]:
+        # --- Creación / edición manual ---
         c1, c2, c3, c4, c5 = st.columns([2, 1.2, 1.2, 1.2, 1])
         i_nombre = c1.text_input("Nombre institución", key="cfg_inst_nombre")
         i_localidad = c2.text_input("Localidad", key="cfg_inst_localidad")
         i_municipio = c3.text_input("Municipio", key="cfg_inst_municipio")
         i_departamento = c4.text_input("Departamento", key="cfg_inst_departamento")
+
         if c5.button("Agregar institución", use_container_width=True, key="btn_add_inst"):
             if not i_nombre.strip():
                 warn_toast("Escribe el nombre de la institución.")
             else:
-                DATA.upsert_institucion(i_nombre.strip(), i_localidad, i_municipio, i_departamento)
+                DATA.upsert_institucion(
+                    i_nombre.strip(),
+                    i_localidad.strip() if i_localidad else None,
+                    i_municipio.strip() if i_municipio else None,
+                    i_departamento.strip() if i_departamento else None,
+                )
                 success_toast("Institución agregada/actualizada.")
                 st.rerun()
+
         st.markdown("**Instituciones activas**")
-        st.dataframe(DATA.list_instituciones(), use_container_width=True, hide_index=True)
+        st.dataframe(
+            DATA.list_instituciones(),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        st.markdown("---")
+        # --- Carga masiva de instituciones ---
+        st.markdown("### Carga masiva de instituciones")
+        st.markdown(
+            '''
+            **Formato esperado (Excel o CSV):**  
+
+            Columnas mínimas:
+            - `nombre`
+
+            Columnas opcionales:
+            - `localidad`
+            - `municipio`
+            - `departamento`
+
+            > La combinación (`nombre`, `municipio`, `departamento`) se usa para evitar duplicados.
+            '''
+        )
+
+        file_inst = st.file_uploader(
+            "Archivo de instituciones (Excel o CSV)",
+            type=["xlsx", "xls", "csv"],
+            key="up_instituciones",
+        )
+
+        if file_inst is not None:
+            if st.button("Procesar instituciones", key="btn_procesar_instituciones"):
+                try:
+                    # Leer archivo
+                    if file_inst.name.lower().endswith(".csv"):
+                        df_inst = pd.read_csv(file_inst, sep=None, engine="python")
+                    else:
+                        df_inst = pd.read_excel(file_inst)
+
+                    if "nombre" not in df_inst.columns:
+                        error_toast("El archivo debe contener al menos la columna 'nombre'.")
+                    else:
+                        ok = 0
+                        for _, row in df_inst.iterrows():
+                            nombre = str(row["nombre"]).strip()
+                            if not nombre:
+                                continue
+
+                            loc = (
+                                str(row["localidad"]).strip()
+                                if "localidad" in df_inst.columns and pd.notna(row["localidad"])
+                                else None
+                            )
+                            mun = (
+                                str(row["municipio"]).strip()
+                                if "municipio" in df_inst.columns and pd.notna(row["municipio"])
+                                else None
+                            )
+                            dep = (
+                                str(row["departamento"]).strip()
+                                if "departamento" in df_inst.columns and pd.notna(row["departamento"])
+                                else None
+                            )
+
+                            DATA.upsert_institucion(nombre, loc, mun, dep)
+                            ok += 1
+
+                        success_toast(f"Se procesaron {ok} instituciones.")
+                        st.rerun()
+                except Exception as e:
+                    error_toast(f"Error procesando instituciones: {e}")
 
     # Profesionales
     with tabs[3]:
