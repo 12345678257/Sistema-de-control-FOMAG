@@ -657,7 +657,7 @@ def render_login_supabase():
             auth = SUPABASE.auth.sign_in_with_password({"email": email, "password": password})
             st.session_state.auth_user = {"email": auth.user.email, "id": auth.user.id}
             success_toast("Has iniciado sesión")
-            st.st.rerun()
+            st.rerun()
         except Exception:
             error_toast("No fue posible iniciar sesión. Verifica credenciales.")
 
@@ -669,7 +669,7 @@ def render_logout_supabase():
         except Exception:
             pass
         st.session_state.auth_user = None
-        st.st.rerun()
+        st.rerun()
 
 
 def sidebar_filters():
@@ -980,7 +980,7 @@ def ui_cargar_datos(auth_email: Optional[str]):
                 creado_por=auth_email,
             )
             success_toast("Atención registrada correctamente.")
-            st.st.rerun()
+            st.rerun()
         except Exception as e:
             error_toast(f"Error al guardar la atención: {e}")
 
@@ -1168,7 +1168,7 @@ def ui_cargar_datos(auth_email: Optional[str]):
                             except Exception:
                                 skipped += 1
                         success_toast(f"Carga masiva finalizada. OK: {ok}, omitidas: {skipped}")
-                        st.st.rerun()
+                        st.rerun()
                 except Exception as e:
                     error_toast(f"Error procesando archivo: {e}")
 
@@ -1217,7 +1217,7 @@ def ui_registros():
         try:
             DATA.delete_registro(int(id_sel))
             success_toast("Atención eliminada.")
-            st.st.rerun()
+            st.rerun()
         except Exception as e:
             error_toast(f"No se pudo eliminar: {e}")
 
@@ -1311,7 +1311,7 @@ def ui_registros():
                 try:
                     DATA.update_registro(int(id_sel), updates)
                     success_toast("Atención actualizada.")
-                    st.st.rerun()
+                    st.rerun()
                 except Exception as e:
                     error_toast(f"No se pudo actualizar: {e}")
 
@@ -1542,7 +1542,7 @@ def ui_configuracion():
             else:
                 DATA.upsert_programa(p_nombre.strip())
                 success_toast("Programa agregado/actualizado.")
-                st.st.rerun()
+                st.rerun()
         st.markdown("**Programas activos**")
         st.dataframe(DATA.list_programas(), use_container_width=True, hide_index=True)
 
@@ -1563,7 +1563,7 @@ def ui_configuracion():
             else:
                 DATA.upsert_convenio(cv_nombre.strip(), prog_map[cv_prog])
                 success_toast("Convenio agregado/actualizado.")
-                st.st.rerun()
+                st.rerun()
         st.markdown("**Convenios activos**")
         st.dataframe(DATA.list_convenios(), use_container_width=True, hide_index=True)
 
@@ -1580,7 +1580,7 @@ def ui_configuracion():
             else:
                 DATA.upsert_institucion(i_nombre.strip(), i_localidad, i_municipio, i_departamento)
                 success_toast("Institución agregada/actualizada.")
-                st.st.rerun()
+                st.rerun()
         st.markdown("**Instituciones activas**")
         st.dataframe(DATA.list_instituciones(), use_container_width=True, hide_index=True)
 
@@ -1617,7 +1617,7 @@ def ui_configuracion():
                     conv_map.get(f_conv),
                 )
                 success_toast("Profesional agregado/actualizado.")
-                st.st.rerun()
+                st.rerun()
 
         st.markdown("**Profesionales activos**")
         st.dataframe(DATA.list_profesores(), use_container_width=True, hide_index=True)
@@ -1687,7 +1687,7 @@ def ui_configuracion():
                             DATA.upsert_profesor(nombre, documento, email, prog_id, conv_id)
                             ok += 1
                         success_toast(f"Se procesaron {ok} profesionales.")
-                        st.st.rerun()
+                        st.rerun()
                 except Exception as e:
                     error_toast(f"Error procesando profesionales: {e}")
 
@@ -1732,7 +1732,7 @@ def ui_configuracion():
                         departamento=cfg_dep or None,
                     )
                     success_toast("Paciente guardado / actualizado.")
-                    st.st.rerun()
+                    st.rerun()
                 except Exception as e:
                     error_toast(f"No se pudo guardar paciente: {e}")
 
@@ -1794,7 +1794,7 @@ def ui_configuracion():
                             )
                             ok += 1
                         success_toast(f"Se procesaron {ok} pacientes.")
-                        st.st.rerun()
+                        st.rerun()
                 except Exception as e:
                     error_toast(f"Error procesando pacientes: {e}")
 
