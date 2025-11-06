@@ -1,0 +1,3 @@
+documento,nombre,fecha_nacimiento,sexo,telefono,email,direccion,localidad,municipio,departamento
+10000001,Carlos López,2010-05-10,M,3001234567,carlos@example.com,Cl 1 # 1-1,Usaquén,Bogotá,Bogotá D.C.
+10000002,Ana Ruiz,2009-11-20,F,3109876543,ana@example.com,Cl 2 # 2-2,Suba,Bogotá,Bogotá D.C.
