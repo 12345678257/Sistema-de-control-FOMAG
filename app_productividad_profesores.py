@@ -1,6 +1,6 @@
 # app_productividad_profesores.py
 # -------------------------------------------------------------
-# Productividad de Profesionales (Enterprise)
+# Dashboard de Profesionales (Enterprise)
 # -------------------------------------------------------------
 
 import os
