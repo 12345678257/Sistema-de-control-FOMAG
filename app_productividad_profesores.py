@@ -23,7 +23,7 @@ except Exception:  # pragma: no cover
     Client = None
 
 
-APP_TITLE = "Productividad de Profesionales"
+APP_TITLE = "Dashboard de Profesionales"
 APP_ICON = "📊"
 DB_SQLITE_PATH = "productividad_profesionales.db"
 
